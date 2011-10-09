@@ -5,7 +5,7 @@ WARN = -Wextra -Wall
 
 CONFIG_STR = -DVERSION="${VERSION}"
 
-PKGS = gtk+-3.0 evince-document-3.0 evince-view-3.0
+PKGS = gtk+-3.0 evince-document-3.0 evince-view-3.0 libgtkhtml-4.0
 CFLAGS = $(shell pkg-config --cflags ${PKGS}) ${OPTIM} ${WARN}
 LDFLAGS = $(shell pkg-config --libs ${PKGS})
 
