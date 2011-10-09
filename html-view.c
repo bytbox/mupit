@@ -8,8 +8,13 @@
 
 GtkHTML *gtk_html = NULL;
 
+void init_html_view() {
+	gtk_html = GTK_HTML(gtk_html_new());
+}
+
 void prepare_html_view() {
-	if (!gtk_html) gtk_html = GTK_HTML(gtk_html_new());
+	if (!gtk_html)
+		init_html_view();
 	view_widget = GTK_WIDGET(gtk_html);
 }
 

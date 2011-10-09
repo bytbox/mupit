@@ -73,9 +73,10 @@ Markdown Copyright (c) 2003-2004 John Gruber &lt;http://daringfireball.net/&gt;<
           </packing>
         </child>
         <child>
-          <object class="GtkViewport" id="view_viewport">
+          <object class="GtkBox" id="view_container">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
             <child>
               <placeholder/>
             </child>
