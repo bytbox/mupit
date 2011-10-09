@@ -11,7 +11,7 @@ LDFLAGS = $(shell pkg-config --libs ${PKGS})
 
 all: mupit
 
-mupit: main.o ui.o
+mupit: main.o ui.o html-view.o doc-view.o
 	cc -o $@ ${LDFLAGS} main.o ui.o
 
 ui.o: ui.c

@@ -2,3 +2,4 @@ mupit
 *.o
 bin2c/bin2c
 ui.c
+*.swp

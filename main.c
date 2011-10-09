@@ -1,8 +1,5 @@
 #include <gtk/gtk.h>
 
-#include <evince-document.h>
-#include <evince-view.h>
-
 #include <stdio.h>
 
 extern char ui_glade[];
