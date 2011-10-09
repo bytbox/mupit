@@ -13,6 +13,8 @@ int main(int argc, char *argv[]) {
 	for (i=0; i<=strlen(argv[1]); i++) {
 		if (argv[1][i] == '.')
 			varname[i] = '_';
+		else if (argv[1][i] == '/')
+			varname[i] = '_';
 		else varname[i] = argv[1][i];
 	}
 

@@ -1,0 +1,42 @@
+#include <glib.h>
+
+#include "common.h"
+
+extern char markdown_Markdown_pl[];
+extern unsigned int markdown_Markdown_pl_len;
+
+void markdown_make(char *filename) {
+	char *perl_path = "/usr/bin/perl";
+
+	int child_pid, standard_input, standard_output, standard_error;
+	GError *err = NULL;
+	char *argv[] = {perl_path, "-", filename, NULL};
+	g_spawn_async_with_pipes(
+		".",
+		argv,
+		NULL,
+		0,
+		NULL,
+		NULL,
+		&child_pid,
+		&standard_input,
+		&standard_output,
+		&standard_error,
+		&err
+		);
+	if (err != NULL) puts(err->message);
+	// spit markdown into standard_input
+	GIOChannel *c = g_io_channel_unix_new(standard_input);
+	GIOChannel *r = g_io_channel_unix_new(standard_output);
+	g_io_channel_write_chars(c, markdown_Markdown_pl, markdown_Markdown_pl_len, NULL, NULL);
+	g_io_channel_flush(c, NULL);
+
+	// and fetch the markdown from the other end
+	// TODO pay attention to the error stream
+	gchar *result;
+	gsize result_len;
+	g_io_channel_read_to_end(r, &result, &result_len, NULL);
+
+	puts(result);
+}
+

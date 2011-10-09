@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+void markdown_make(char *filename);
+
 extern char ui_glade[];
 extern int ui_glade_len;
 
