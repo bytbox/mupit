@@ -29,7 +29,7 @@ bin2c/bin2c: bin2c/bin2c.c bin2c/Makefile
 	make -C bin2c
 
 clean:
-	rm -rf mupit *.o ui.c
+	rm -rf mupit *.o ui.c markdown-script.c
 	make -C bin2c clean
 
 .PHONY: clean all
