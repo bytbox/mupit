@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+#include "common.h"
+
 void markdown_make(char *filename);
 
 extern char ui_glade[];
@@ -9,6 +11,9 @@ extern int ui_glade_len;
 
 GtkBuilder *builder;
 GtkAboutDialog *ad;
+
+char *result_content;
+enum result_type_e result_type;
 
 static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
 	GdkEventKey k = event->key;
