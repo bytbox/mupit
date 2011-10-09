@@ -51,9 +51,13 @@ Markdown Copyright (c) 2003-2004 John Gruber &lt;http://daringfireball.net/&gt;<
           <object class="GtkScrolledWindow" id="scrolledwindow1">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">never</property>
+            <property name="vscrollbar_policy">always</property>
+            <property name="window_placement">top-right</property>
+            <property name="window_placement_set">True</property>
             <property name="shadow_type">in</property>
             <child>
-              <object class="GtkTextView" id="textview1">
+              <object class="GtkTextView" id="textview">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="wrap_mode">word</property>
@@ -69,7 +73,7 @@ Markdown Copyright (c) 2003-2004 John Gruber &lt;http://daringfireball.net/&gt;<
           </packing>
         </child>
         <child>
-          <object class="GtkViewport" id="viewport1">
+          <object class="GtkViewport" id="view_viewport">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
