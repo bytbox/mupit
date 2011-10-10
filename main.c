@@ -78,6 +78,9 @@ int main (int argc, char *argv[]) {
 		gtk_text_buffer_set_text(buffer, source, -1);
 	} else {
 		close(g_file_open_tmp("mupit.scratchXXXXXX", &source_filename, NULL));
+		gchar *source = "I <em>should</em> put a welcome message here...";
+		GtkTextBuffer *buffer = gtk_text_view_get_buffer(textview);
+		gtk_text_buffer_set_text(buffer, source, -1);
 	}
 
 
