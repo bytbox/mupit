@@ -12,7 +12,7 @@
 
 ## TODO
 
-  * Add tex support
+  * Add tex/dvi support
   * Increase update speed using actual threading
   * Allow "save as"
   * Use monospaced font for the editing area.
