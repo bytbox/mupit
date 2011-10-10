@@ -45,6 +45,11 @@ void do_update_view();
 gboolean do_update_view_(gpointer);
 gpointer updater (gpointer);
 
+static gboolean show_about(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
+	gtk_widget_show(GTK_WIDGET(ad));
+	return TRUE;
+}
+
 static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
 	GdkEventKey k = event->key;
 	if (k.state & GDK_CONTROL_MASK) {
@@ -117,6 +122,7 @@ int main (int argc, char *argv[]) {
 
 #define CONNECT(x,y,z) g_signal_connect(GTK_WIDGET(gtk_builder_get_object(builder, x)), y, G_CALLBACK(z), NULL)
 	CONNECT("quit_menuitem", "activate", gtk_main_quit);
+	CONNECT("about_menuitem", "activate", show_about);
 
 	g_object_unref (G_OBJECT (builder));
 
