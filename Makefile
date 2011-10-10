@@ -1,4 +1,4 @@
-VERSION = 0.0.1
+VERSION = 0.2
 
 OPTIM = -g -O0
 WARN = -Wextra -Wall -Wno-unused-parameter
