@@ -19,7 +19,7 @@ void prepare_html_view() {
 }
 
 void update_html_view() {
-	puts("Updating");
-	gtk_html_load_from_string(gtk_html, result_content, strlen(result_content));
+	if (strlen(result_content) > 0)
+		gtk_html_load_from_string(gtk_html, result_content, -1);
 }
 

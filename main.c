@@ -29,6 +29,7 @@ enum result_type_e result_type;
 
 enum source_type_e source_type_from_ext(char *);
 void do_update_view();
+gboolean do_update_view_(gpointer);
 
 static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
 	GdkEventKey k = event->key;
@@ -79,6 +80,8 @@ int main (int argc, char *argv[]) {
 	update_html_view();
 */
 	do_update_view();
+	g_timeout_add(100, do_update_view_, NULL);
+
 	gtk_container_add(GTK_CONTAINER(view_container), view_widget);
 
 	gtk_widget_show_all(window);
@@ -109,7 +112,14 @@ void do_save() {
 	g_file_set_contents(source_filename, text, -1, NULL);
 }
 
+gboolean do_update_view_(gpointer data) {
+	// argument is ignored
+	do_update_view();
+	return TRUE;
+}
+
 void do_update_view() {
+	// TODO don't do anything if nothing's changed
 	do_save();
 	enum source_type_e source_type = source_type_from_ext(source_filename);
 	switch (source_type) {
