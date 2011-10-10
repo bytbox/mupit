@@ -27,12 +27,15 @@ GtkLayout *view_layout;
 GThread *update_thread;
 GCond *updated_cond;
 GMutex *updated_mutex;
+GMutex *update_mutex;
 GCond *continue_cond;
 GMutex *continue_mutex;
 gboolean continue_able;
+gboolean updated = FALSE;
 gboolean interactive = FALSE;
 
 char *source_filename = NULL;
+char *source_content = NULL;
 char *result_content = NULL;
 enum result_type_e result_type;
 
@@ -59,20 +62,28 @@ static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *la
 }
 
 static gboolean modification_made(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
-	continue_able = FALSE;
-	g_mutex_lock(updated_mutex);
-	g_cond_signal(updated_cond);
-	g_mutex_unlock(updated_mutex);
+	if (!interactive) return FALSE;
+	// all parameters are unused
 
-	g_mutex_lock(continue_mutex);
-	if (interactive)
-		while (!continue_able)
-			g_cond_wait(continue_cond, continue_mutex);
-	g_mutex_unlock(continue_mutex);
-	// all parameters unused
-/*
-	do_save();
-	do_update_view();*/
+	g_mutex_lock(update_mutex);
+	// mark as updated
+	updated = TRUE;
+
+	// copy the buffer contents
+	GtkTextIter start;
+	GtkTextIter end;
+
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer(textview);
+
+	gtk_text_buffer_get_start_iter (buffer, &start);
+	gtk_text_buffer_get_end_iter (buffer, &end);
+
+	source_content = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+
+	// and now signal our completion
+	g_cond_signal(updated_cond);
+
+	g_mutex_unlock(update_mutex);
 	return FALSE;
 }
 
@@ -81,9 +92,11 @@ int main (int argc, char *argv[]) {
 
 	gtk_init(&argc, &argv);
 	g_thread_init(NULL);
+	gdk_threads_init();
 
 	updated_cond = g_cond_new();
 	updated_mutex = g_mutex_new();
+	update_mutex = g_mutex_new();
 	continue_cond = g_cond_new();
 	continue_mutex = g_mutex_new();
 
@@ -129,8 +142,11 @@ int main (int argc, char *argv[]) {
 
 	gtk_container_add(GTK_CONTAINER(view_container), view_widget);
 	interactive = TRUE;
+
+	gdk_threads_enter();
 	gtk_widget_show_all(window);
 	gtk_main();
+	gdk_threads_leave();
 
 	return 0;
 }
@@ -143,18 +159,7 @@ enum source_type_e source_type_from_ext(char *ext) {
 	return HTML_SRC; // TODO this should probably be an error
 }
 
-void do_save() {
-	GtkTextIter start;
-	GtkTextIter end;
-
-	GtkTextBuffer *buffer = gtk_text_view_get_buffer(textview);
-
-	/* Obtain iters for the start and end of points of the buffer */
-	gtk_text_buffer_get_start_iter (buffer, &start);
-	gtk_text_buffer_get_end_iter (buffer, &end);
-
-	/* Get the entire buffer text. */
-	gchar *text = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+void do_save(gchar *text) {
 	g_file_set_contents(source_filename, text, -1, NULL);
 }
 
@@ -166,15 +171,22 @@ gboolean do_update_view_(gpointer data) {
 
 gpointer updater(gpointer data) {
 	// argument is ignored
+
 	g_mutex_lock(updated_mutex);
 	while (TRUE) {
-		g_cond_wait(updated_cond, updated_mutex);
-		do_save();
-		continue_able = TRUE;
-		g_mutex_lock(continue_mutex);
-		g_cond_signal(continue_cond);
-		g_mutex_unlock(continue_mutex);
-		do_update_view();
+		//g_cond_wait(updated_cond, updated_mutex);
+		while (updated) {
+			// make our local copy of the buffer text
+			g_mutex_lock(update_mutex);
+			gchar *text = g_strdup(source_content);
+			updated=FALSE;
+			g_mutex_unlock(update_mutex);
+
+			do_save(text);
+			do_update_view();
+			g_free(text);
+			g_thread_yield();
+		}
 	}
 	g_mutex_unlock(updated_mutex);
 	return NULL;
