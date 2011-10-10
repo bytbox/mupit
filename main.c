@@ -19,8 +19,10 @@ GtkAboutDialog *ad;
 GtkTextView *textview;
 GtkViewport *view_viewport;
 GtkContainer *view_container;
+GtkScrolledWindow *view_scroll;
+GtkLayout *view_layout;
 
-char *result_content;
+char *result_content = NULL;
 enum result_type_e result_type;
 
 enum source_type_e source_type_from_ext(char *);
@@ -47,8 +49,8 @@ int main (int argc, char *argv[]) {
 	window = GTK_WIDGET (gtk_builder_get_object (builder, "window1"));
 	ad = GTK_ABOUT_DIALOG (gtk_builder_get_object(builder, "about"));
 	textview = GTK_TEXT_VIEW (gtk_builder_get_object(builder, "textview"));
-	//view_viewport = GTK_VIEWPORT (gtk_builder_get_object(builder, "view_viewport"));
 	view_container = GTK_CONTAINER (gtk_builder_get_object(builder, "view_container"));
+	//gtk_widget_set_size_request(GTK_WIDGET(view_viewport), 500, -1);
 
 	gtk_builder_connect_signals (builder, NULL);
 	g_object_unref (G_OBJECT (builder));
@@ -59,7 +61,7 @@ int main (int argc, char *argv[]) {
 	markdown_make("LICENSE");
 	prepare_html_view();
 	update_html_view();
-	//gtk_container_add(GTK_CONTAINER(view_viewport), view_widget);
+	//gtk_widget_set_size_request(GTK_WIDGET(view_widget), 1, 1);
 	gtk_container_add(GTK_CONTAINER(view_container), view_widget);
 
 	gtk_widget_show_all(window);

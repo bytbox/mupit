@@ -45,7 +45,6 @@ Markdown Copyright (c) 2003-2004 John Gruber &lt;http://daringfireball.net/&gt;<
       <object class="GtkBox" id="box1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="spacing">5</property>
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkScrolledWindow" id="scrolledwindow1">
@@ -60,7 +59,7 @@ Markdown Copyright (c) 2003-2004 John Gruber &lt;http://daringfireball.net/&gt;<
               <object class="GtkTextView" id="textview">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="wrap_mode">word</property>
+                <property name="wrap_mode">word-char</property>
                 <property name="left_margin">1</property>
                 <property name="right_margin">1</property>
               </object>
@@ -73,10 +72,10 @@ Markdown Copyright (c) 2003-2004 John Gruber &lt;http://daringfireball.net/&gt;<
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="view_container">
+          <object class="GtkScrolledWindow" id="view_container">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="orientation">vertical</property>
+            <property name="can_focus">True</property>
+            <property name="shadow_type">in</property>
             <child>
               <placeholder/>
             </child>
