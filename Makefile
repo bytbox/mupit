@@ -9,7 +9,7 @@ PKGS = gtk+-3.0 evince-document-3.0 evince-view-3.0 libgtkhtml-4.0
 CFLAGS = $(shell pkg-config --cflags ${PKGS}) ${OPTIM} ${WARN}
 LDFLAGS = $(shell pkg-config --libs ${PKGS})
 
-OBJ = main ui html-view doc-view html-make tex-make markdown-make markdown-script
+OBJ = main ui html-view doc-view html-make tex-make markdown-make markdown-script asciidoc-make
 OBJFILES = ${OBJ:=.o} 
 
 all: mupit

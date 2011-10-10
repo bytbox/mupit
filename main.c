@@ -1,14 +1,12 @@
 #include <glib.h>
-
 #include <gtk/gtk.h>
-
-#include <stdio.h>
 #include <string.h>
 
 #include "common.h"
 
 void html_make(char *filename);
 void markdown_make(char *filename);
+void asciidoc_make(char *filename);
 void prepare_html_view();
 void update_html_view();
 
@@ -101,9 +99,10 @@ int main (int argc, char *argv[]) {
 }
 
 enum source_type_e source_type_from_ext(char *ext) {
-	if (strstr(ext, ".htm")) return HTML_SRC;
-	if (strstr(ext, ".md")) return MARKDOWN_SRC;
-	if (strstr(ext, ".tex")) return TEX_SRC;
+	if (g_strrstr(ext, ".htm")) return HTML_SRC;
+	if (g_strrstr(ext, ".md")) return MARKDOWN_SRC;
+	if (g_strrstr(ext, ".txt")) return ASCIIDOC_SRC;
+	if (g_strrstr(ext, ".tex")) return TEX_SRC;
 	return HTML_SRC; // TODO this should probably be an error
 }
 
@@ -139,6 +138,8 @@ void do_update_view() {
 	case MARKDOWN_SRC:
 		markdown_make(source_filename);
 		break;
+	case ASCIIDOC_SRC:
+		asciidoc_make(source_filename);
 	case TEX_SRC:
 		break;
 	}
@@ -149,5 +150,12 @@ void do_update_view() {
 		update_html_view();
 		break;
 	}
+}
+
+char *find_tool(char *t) {
+	int len = strlen(t) + 20;
+	gchar *buf = g_new(gchar, len);
+	g_snprintf(buf, len, "/usr/bin/%s", t); // TODO actually search the path
+	return buf;
 }
 
