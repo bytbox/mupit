@@ -90,7 +90,7 @@ int main (int argc, char *argv[]) {
 	update_html_view();
 */
 	do_update_view();
-	g_timeout_add(500, do_update_view_, NULL);
+	g_timeout_add(1000, do_update_view_, NULL);
 
 	gtk_container_add(GTK_CONTAINER(view_container), view_widget);
 
