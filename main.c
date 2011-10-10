@@ -37,6 +37,7 @@ char *result_content = NULL;
 enum result_type_e result_type;
 
 enum source_type_e source_type_from_ext(char *);
+void do_save();
 void do_update_view();
 gboolean do_update_view_(gpointer);
 gpointer updater (gpointer);
@@ -59,13 +60,19 @@ static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *la
 
 static gboolean modification_made(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
 	continue_able = FALSE;
+	g_mutex_lock(updated_mutex);
 	g_cond_signal(updated_cond);
+	g_mutex_unlock(updated_mutex);
+
 	g_mutex_lock(continue_mutex);
 	if (interactive)
 		while (!continue_able)
 			g_cond_wait(continue_cond, continue_mutex);
 	g_mutex_unlock(continue_mutex);
 	// all parameters unused
+/*
+	do_save();
+	do_update_view();*/
 	return FALSE;
 }
 
