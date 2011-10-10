@@ -33,6 +33,6 @@ These aren't features. These are just things that are so.
 
 ## Known Bugs
 
-  * None!
+  * There are no doubt many horrible memory leaks.
 
 Please report additional bugs to <bytbox@gmail.com>.

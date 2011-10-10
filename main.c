@@ -115,10 +115,6 @@ int main (int argc, char *argv[]) {
 	g_signal_connect(window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 	g_signal_connect(window, "key-press-event", G_CALLBACK (key_press_event), NULL);
 	g_signal_connect(gtk_text_view_get_buffer(textview), "changed", G_CALLBACK(modification_made), NULL);
-	/*g_signal_connect(textview, "insert-at-cursor", G_CALLBACK(modification_made), NULL);
-	g_signal_connect(textview, "delete-from-cursor", G_CALLBACK(modification_made), NULL);
-	g_signal_connect(textview, "backspace", G_CALLBACK(modification_made), NULL);
-	g_signal_connect(textview, "paste-clipboard", G_CALLBACK(modification_made), NULL);*/
 
 	// TODO actual option parsing
 	if (argc == 2) {
