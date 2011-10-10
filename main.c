@@ -47,13 +47,6 @@ static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *la
 }
 
 int main (int argc, char *argv[]) {
-	// TODO actual option parsing
-	if (argc == 2) {
-		source_filename = argv[1];
-	} else {
-		close(g_file_open_tmp("mupit.scratchXXXXXX", &source_filename, NULL));
-	}
-
 	GtkWidget *window;
 
 	gtk_init(&argc, &argv);
@@ -73,6 +66,20 @@ int main (int argc, char *argv[]) {
 	
 	g_signal_connect(window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 	g_signal_connect(window, "key-press-event", G_CALLBACK (key_press_event), NULL);
+
+	// TODO actual option parsing
+	if (argc == 2) {
+		source_filename = argv[1];
+		// read the file, if it exists
+		gchar *source;
+		g_file_get_contents(source_filename, &source, NULL, NULL);
+
+		GtkTextBuffer *buffer = gtk_text_view_get_buffer(textview);
+		gtk_text_buffer_set_text(buffer, source, -1);
+	} else {
+		close(g_file_open_tmp("mupit.scratchXXXXXX", &source_filename, NULL));
+	}
+
 
 /*
 	markdown_make("LICENSE");
