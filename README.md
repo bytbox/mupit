@@ -1,5 +1,18 @@
 `mupit` is a simple markup editor, featuring real-time updates and a minimal, distraction-free user interface.
 
+## Non-features
+
+These aren't features. These are just things that are so.
+
+  * Rapid previewing
+  * Minimal user interface
+  * Automatic save - whatever displays in the preview window has already been saved to disk
+
+## Supported Markup Systems
+
+  * Asciidoc
+  * Markdown
+  * HTML
 
 ## System Requirements
 
