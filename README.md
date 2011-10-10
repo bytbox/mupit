@@ -5,7 +5,9 @@
 
   * GTK+ 3
   * GtkHTML
-  * Perl
+  * Perl (for markdown)
+  * Asciidoc
+  * Tex
 
 
 ## TODO
