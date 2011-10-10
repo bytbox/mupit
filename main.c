@@ -54,7 +54,6 @@ static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *la
 }
 
 static gboolean modification_made(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
-	puts ("Anything?");
 	g_cond_signal(updated_cond);
 	// all parameters unused
 	return FALSE;
