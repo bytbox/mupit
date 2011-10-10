@@ -1,7 +1,7 @@
 VERSION = 0.0.1
 
 OPTIM = -g -O0
-WARN = -Wextra -Wall
+WARN = -Wextra -Wall -Wno-unused-parameter
 
 CONFIG_STR = -DVERSION="${VERSION}"
 

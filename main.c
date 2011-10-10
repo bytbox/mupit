@@ -7,6 +7,7 @@
 
 #include "common.h"
 
+void html_make(char *filename);
 void markdown_make(char *filename);
 void prepare_html_view();
 void update_html_view();
@@ -22,16 +23,22 @@ GtkContainer *view_container;
 GtkScrolledWindow *view_scroll;
 GtkLayout *view_layout;
 
+char *source_filename = NULL;
 char *result_content = NULL;
 enum result_type_e result_type;
 
 enum source_type_e source_type_from_ext(char *);
+void do_update_view();
 
 static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
 	GdkEventKey k = event->key;
 	if (k.state & GDK_CONTROL_MASK) {
-		if (k.keyval == 'h') {
+		switch (k.keyval) {
+		case 'h':
 			gtk_widget_show(GTK_WIDGET(ad));
+			return TRUE;
+		case 'r':
+			do_update_view();
 			return TRUE;
 		}
 	}
@@ -39,9 +46,17 @@ static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *la
 }
 
 int main (int argc, char *argv[]) {
+	// TODO actual option parsing
+	if (argc == 2) {
+		source_filename = argv[1];
+	} else {
+		close(g_file_open_tmp("mupit.scratchXXXXXX", &source_filename, NULL));
+	}
+
 	GtkWidget *window;
 
 	gtk_init(&argc, &argv);
+	g_thread_init(NULL);
 
 	builder = gtk_builder_new ();
 	gtk_builder_add_from_string(builder, ui_glade, ui_glade_len, NULL);
@@ -58,10 +73,12 @@ int main (int argc, char *argv[]) {
 	g_signal_connect(window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 	g_signal_connect(window, "key-press-event", G_CALLBACK (key_press_event), NULL);
 
+/*
 	markdown_make("LICENSE");
 	prepare_html_view();
 	update_html_view();
-	//gtk_widget_set_size_request(GTK_WIDGET(view_widget), 1, 1);
+*/
+	do_update_view();
 	gtk_container_add(GTK_CONTAINER(view_container), view_widget);
 
 	gtk_widget_show_all(window);
@@ -71,8 +88,46 @@ int main (int argc, char *argv[]) {
 }
 
 enum source_type_e source_type_from_ext(char *ext) {
-	if (strstr(ext, "htm")) return HTML_SRC;
-	if (strstr(ext, "md")) return MARKDOWN_SRC;
+	if (strstr(ext, ".htm")) return HTML_SRC;
+	if (strstr(ext, ".md")) return MARKDOWN_SRC;
+	if (strstr(ext, ".tex")) return TEX_SRC;
 	return HTML_SRC; // TODO this should probably be an error
+}
+
+void do_save() {
+	GtkTextIter start;
+	GtkTextIter end;
+
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer(textview);
+
+	/* Obtain iters for the start and end of points of the buffer */
+	gtk_text_buffer_get_start_iter (buffer, &start);
+	gtk_text_buffer_get_end_iter (buffer, &end);
+
+	/* Get the entire buffer text. */
+	gchar *text = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+	g_file_set_contents(source_filename, text, -1, NULL);
+}
+
+void do_update_view() {
+	do_save();
+	enum source_type_e source_type = source_type_from_ext(source_filename);
+	switch (source_type) {
+	case HTML_SRC:
+		html_make(source_filename);
+		break;
+	case MARKDOWN_SRC:
+		markdown_make(source_filename);
+		break;
+	case TEX_SRC:
+		break;
+	}
+
+	switch (result_type) {
+	case HTML:
+		prepare_html_view();
+		update_html_view();
+		break;
+	}
 }
 

@@ -3,9 +3,10 @@
 
 #include <gtk/gtk.h>
 
+enum source_type_e { HTML_SRC, MARKDOWN_SRC, TEX_SRC };
+
 extern char *result_content;
 extern enum result_type_e { HTML } result_type;
-extern enum source_type_e { HTML_SRC, MARKDOWN_SRC } source_type;
 
 GtkWidget *view_widget;
 
