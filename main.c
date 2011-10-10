@@ -10,9 +10,11 @@ void asciidoc_make(char *filename);
 void prepare_html_view();
 void update_html_view();
 
+/* Loading the gui - see ui.glade and the generated ui.c */
 extern char ui_glade[];
 extern int ui_glade_len;
 
+/* GUI components */
 GtkBuilder *builder;
 GtkAboutDialog *ad;
 GtkTextView *textview;
@@ -21,6 +23,11 @@ GtkContainer *view_container;
 GtkScrolledWindow *view_scroll;
 GtkLayout *view_layout;
 
+/* Update control */
+GThread *update_thread;
+GCond *updated_cond;
+GMutex *updated_mutex;
+
 char *source_filename = NULL;
 char *result_content = NULL;
 enum result_type_e result_type;
@@ -28,6 +35,7 @@ enum result_type_e result_type;
 enum source_type_e source_type_from_ext(char *);
 void do_update_view();
 gboolean do_update_view_(gpointer);
+gpointer updater (gpointer);
 
 static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
 	GdkEventKey k = event->key;
@@ -41,7 +49,15 @@ static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *la
 			return TRUE;
 		}
 	}
+
 	return FALSE; // fall through
+}
+
+static gboolean modification_made(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
+	puts ("Anything?");
+	g_cond_signal(updated_cond);
+	// all parameters unused
+	return FALSE;
 }
 
 int main (int argc, char *argv[]) {
@@ -49,6 +65,9 @@ int main (int argc, char *argv[]) {
 
 	gtk_init(&argc, &argv);
 	g_thread_init(NULL);
+
+	updated_cond = g_cond_new();
+	updated_mutex = g_mutex_new();
 
 	builder = gtk_builder_new ();
 	gtk_builder_add_from_string(builder, ui_glade, ui_glade_len, NULL);
@@ -64,6 +83,11 @@ int main (int argc, char *argv[]) {
 	
 	g_signal_connect(window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 	g_signal_connect(window, "key-press-event", G_CALLBACK (key_press_event), NULL);
+	g_signal_connect(gtk_text_view_get_buffer(textview), "changed", G_CALLBACK(modification_made), NULL);
+	/*g_signal_connect(textview, "insert-at-cursor", G_CALLBACK(modification_made), NULL);
+	g_signal_connect(textview, "delete-from-cursor", G_CALLBACK(modification_made), NULL);
+	g_signal_connect(textview, "backspace", G_CALLBACK(modification_made), NULL);
+	g_signal_connect(textview, "paste-clipboard", G_CALLBACK(modification_made), NULL);*/
 
 	// TODO actual option parsing
 	if (argc == 2) {
@@ -82,13 +106,8 @@ int main (int argc, char *argv[]) {
 	}
 
 
-/*
-	markdown_make("LICENSE");
-	prepare_html_view();
-	update_html_view();
-*/
 	do_update_view();
-	g_timeout_add(1000, do_update_view_, NULL);
+	update_thread = g_thread_create(updater, NULL, TRUE, NULL);
 
 	gtk_container_add(GTK_CONTAINER(view_container), view_widget);
 
@@ -125,6 +144,17 @@ gboolean do_update_view_(gpointer data) {
 	// argument is ignored
 	do_update_view();
 	return TRUE;
+}
+
+gpointer updater(gpointer data) {
+	// argument is ignored
+	g_mutex_lock(updated_mutex);
+	while (TRUE) {
+		g_cond_wait(updated_cond, updated_mutex);
+		do_update_view();
+	}
+	g_mutex_unlock(updated_mutex);
+	return NULL;
 }
 
 void do_update_view() {
