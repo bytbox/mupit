@@ -27,6 +27,10 @@ GtkLayout *view_layout;
 GThread *update_thread;
 GCond *updated_cond;
 GMutex *updated_mutex;
+GCond *continue_cond;
+GMutex *continue_mutex;
+gboolean continue_able;
+gboolean interactive = FALSE;
 
 char *source_filename = NULL;
 char *result_content = NULL;
@@ -54,7 +58,13 @@ static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *la
 }
 
 static gboolean modification_made(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
+	continue_able = FALSE;
 	g_cond_signal(updated_cond);
+	g_mutex_lock(continue_mutex);
+	if (interactive)
+		while (!continue_able)
+			g_cond_wait(continue_cond, continue_mutex);
+	g_mutex_unlock(continue_mutex);
 	// all parameters unused
 	return FALSE;
 }
@@ -67,6 +77,8 @@ int main (int argc, char *argv[]) {
 
 	updated_cond = g_cond_new();
 	updated_mutex = g_mutex_new();
+	continue_cond = g_cond_new();
+	continue_mutex = g_mutex_new();
 
 	builder = gtk_builder_new ();
 	gtk_builder_add_from_string(builder, ui_glade, ui_glade_len, NULL);
@@ -109,7 +121,7 @@ int main (int argc, char *argv[]) {
 	update_thread = g_thread_create(updater, NULL, TRUE, NULL);
 
 	gtk_container_add(GTK_CONTAINER(view_container), view_widget);
-
+	interactive = TRUE;
 	gtk_widget_show_all(window);
 	gtk_main();
 
@@ -150,6 +162,11 @@ gpointer updater(gpointer data) {
 	g_mutex_lock(updated_mutex);
 	while (TRUE) {
 		g_cond_wait(updated_cond, updated_mutex);
+		do_save();
+		continue_able = TRUE;
+		g_mutex_lock(continue_mutex);
+		g_cond_signal(continue_cond);
+		g_mutex_unlock(continue_mutex);
 		do_update_view();
 	}
 	g_mutex_unlock(updated_mutex);
@@ -157,8 +174,6 @@ gpointer updater(gpointer data) {
 }
 
 void do_update_view() {
-	// TODO don't do anything if nothing's changed
-	do_save();
 	enum source_type_e source_type = source_type_from_ext(source_filename);
 	switch (source_type) {
 	case HTML_SRC:
