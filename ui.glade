@@ -99,7 +99,7 @@ Markdown Copyright (c) 2003-2004 John Gruber &lt;http://daringfireball.net/&gt;<
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem5">
+                      <object class="GtkImageMenuItem" id="quit_menuitem">
                         <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>

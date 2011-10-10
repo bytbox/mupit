@@ -110,11 +110,15 @@ int main (int argc, char *argv[]) {
 	//gtk_widget_set_size_request(GTK_WIDGET(view_viewport), 500, -1);
 
 	gtk_builder_connect_signals (builder, NULL);
-	g_object_unref (G_OBJECT (builder));
 	
 	g_signal_connect(window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 	g_signal_connect(window, "key-press-event", G_CALLBACK (key_press_event), NULL);
 	g_signal_connect(gtk_text_view_get_buffer(textview), "changed", G_CALLBACK(modification_made), NULL);
+
+#define CONNECT(x,y,z) g_signal_connect(GTK_WIDGET(gtk_builder_get_object(builder, x)), y, G_CALLBACK(z), NULL)
+	CONNECT("quit_menuitem", "activate", gtk_main_quit);
+
+	g_object_unref (G_OBJECT (builder));
 
 	// TODO actual option parsing
 	if (argc == 2) {
