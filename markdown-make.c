@@ -1,4 +1,5 @@
 #include <glib.h>
+#include <stdio.h>
 
 #include "common.h"
 
@@ -7,6 +8,7 @@ extern unsigned int markdown_Markdown_pl_len;
 
 void markdown_make(char *filename) {
 	char *perl_path = find_tool("perl");
+	GError *err = NULL;
 
 	int child_pid, standard_input, standard_output, standard_error;
 	char *argv[] = {perl_path, "-", filename, NULL};
@@ -21,8 +23,14 @@ void markdown_make(char *filename) {
 		&standard_input,
 		&standard_output,
 		&standard_error,
-		NULL
+		&err
 		);
+
+	if (err) {
+		fprintf(stderr, "SPAWN ERROR: %s\n", err->message);
+		return;
+	}
+
 	// spit markdown into standard_input
 	GIOChannel *c = g_io_channel_unix_new(standard_input);
 	GIOChannel *r = g_io_channel_unix_new(standard_output);
