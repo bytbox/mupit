@@ -1,4 +1,4 @@
-`mupit` is a simple markup editor, featuring real-time updates and a minimal, distraction-free user interface.
+`mupit` is a simple markup editor, featuring real-time previewing and a minimal, distraction-free user interface.
 
 
 ## Non-features
