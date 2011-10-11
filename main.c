@@ -46,7 +46,8 @@ gboolean do_update_view_(gpointer);
 gpointer updater (gpointer);
 
 static gboolean show_about(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
-	gtk_widget_show(GTK_WIDGET(ad));
+	gtk_dialog_run(GTK_DIALOG(ad));
+	gtk_widget_hide(ad);
 	return TRUE;
 }
 
@@ -55,7 +56,8 @@ static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *la
 	if (k.state & GDK_CONTROL_MASK) {
 		switch (k.keyval) {
 		case 'h':
-			gtk_widget_show(GTK_WIDGET(ad));
+			gtk_dialog_run(GTK_DIALOG(ad));
+			gtk_widget_hide(ad);
 			return TRUE;
 		case 'r':
 			do_update_view();
