@@ -148,6 +148,7 @@ int main (int argc, char *argv[]) {
 
 	gtk_container_add(GTK_CONTAINER(view_container), view_widget);
 	interactive = TRUE;
+	modification_made(NULL, NULL, NULL);
 
 	gdk_threads_enter();
 	gtk_widget_show_all(window);
