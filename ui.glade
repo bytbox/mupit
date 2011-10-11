@@ -65,8 +65,8 @@ Markdown Copyright (c) 2003-2004 John Gruber &lt;http://daringfireball.net/&gt;<
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem1">
                         <property name="label">gtk-new</property>
-                        <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="no_show_all">True</property>
                         <property name="use_action_appearance">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
@@ -75,8 +75,8 @@ Markdown Copyright (c) 2003-2004 John Gruber &lt;http://daringfireball.net/&gt;<
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem2">
                         <property name="label">gtk-open</property>
-                        <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="no_show_all">True</property>
                         <property name="use_action_appearance">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
@@ -85,8 +85,8 @@ Markdown Copyright (c) 2003-2004 John Gruber &lt;http://daringfireball.net/&gt;<
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem4">
                         <property name="label">gtk-save-as</property>
-                        <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="no_show_all">True</property>
                         <property name="use_action_appearance">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
