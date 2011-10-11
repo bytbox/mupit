@@ -5,7 +5,7 @@
 
 These aren't features. These are just things that are so.
 
-  * Rapid previewing
+  * Real-time previewing
   * Minimal user interface
   * Automatic save - whatever displays in the preview window has already been saved to disk
 
