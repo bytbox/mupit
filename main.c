@@ -7,8 +7,14 @@
 void html_make(char *filename);
 void markdown_make(char *filename);
 void asciidoc_make(char *filename);
+void tex_make(char *filename);
+
 void prepare_html_view();
 void update_html_view();
+void prepare_pdf_view();
+void update_pdf_view();
+void prepare_dvi_view();
+void update_dvi_view();
 
 /* Loading the gui - see ui.glade and the generated ui.c */
 extern char ui_glade[];

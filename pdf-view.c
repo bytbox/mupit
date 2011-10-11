@@ -5,7 +5,11 @@
 
 #include "common.h"
 
-void prepare_doc_view() {
+void prepare_pdf_view() {
+
+}
+
+void update_pdf_view() {
 
 }
 
