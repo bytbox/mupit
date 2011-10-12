@@ -42,6 +42,8 @@ void markdown_make(char *filename) {
 	gchar *result;
 	gsize result_len;
 	g_io_channel_read_to_end(r, &result, &result_len, NULL);
+	g_io_channel_shutdown(c, TRUE, NULL);
+	g_io_channel_shutdown(r, TRUE, NULL);
 	result_content = result;
 	result_type = HTML;
 }

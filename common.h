@@ -6,7 +6,7 @@
 enum source_type_e { HTML_SRC, MARKDOWN_SRC, ASCIIDOC_SRC, TEX_SRC };
 
 extern char *result_content;
-extern enum result_type_e { HTML } result_type;
+extern enum result_type_e { HTML, PDF, DVI } result_type;
 
 GtkWidget *view_widget;
 

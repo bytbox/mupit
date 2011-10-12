@@ -219,6 +219,7 @@ void do_update_view() {
 	case ASCIIDOC_SRC:
 		asciidoc_make(source_filename);
 	case TEX_SRC:
+		tex_make(source_filename);
 		break;
 	}
 
@@ -226,6 +227,10 @@ void do_update_view() {
 	case HTML:
 		prepare_html_view();
 		update_html_view();
+		break;
+	case DVI:
+		break;
+	case PDF:
 		break;
 	}
 }
