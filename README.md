@@ -38,7 +38,6 @@ These aren't features. These are just things that are so.
     * mediawiki (perhaps integrated with a mediawiki api)
     * pod
     * groff
-  * Increase update speed using actual threading
   * Allow "save as"
   * Use monospaced font for the editing area.
   * Add the standard text editor features
@@ -48,7 +47,7 @@ These aren't features. These are just things that are so.
 ## Known Bugs
 
   * There are no doubt many horrible memory leaks.
-  * There are pipe leaks too.
 
 Please report additional bugs to <bytbox@gmail.com>.
+
 
