@@ -46,7 +46,7 @@ char *result_content = NULL;
 enum result_type_e result_type;
 
 enum source_type_e source_type_from_ext(char *);
-void do_save();
+void do_save(gchar *);
 void do_update_view();
 gboolean do_update_view_(gpointer);
 gpointer updater (gpointer);
@@ -150,7 +150,15 @@ int main (int argc, char *argv[]) {
 		gtk_text_buffer_set_text(buffer, source, -1);
 	}
 
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer(textview);
+	GtkTextIter start;
+	GtkTextIter end;
 
+	gtk_text_buffer_get_start_iter (buffer, &start);
+	gtk_text_buffer_get_end_iter (buffer, &end);
+
+	source_content = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+	do_save(source_content);
 	do_update_view();
 	update_thread = g_thread_create(updater, NULL, TRUE, NULL);
 
@@ -175,7 +183,8 @@ enum source_type_e source_type_from_ext(char *ext) {
 }
 
 void do_save(gchar *text) {
-	g_file_set_contents(source_filename, text, -1, NULL);
+	char *alltext = g_strconcat(text, "\n", NULL);
+	g_file_set_contents(source_filename, alltext, -1, NULL);
 }
 
 gboolean do_update_view_(gpointer data) {
@@ -218,6 +227,7 @@ void do_update_view() {
 		break;
 	case ASCIIDOC_SRC:
 		asciidoc_make(source_filename);
+		break;
 	case TEX_SRC:
 		tex_make(source_filename);
 		break;

@@ -5,7 +5,7 @@
 void asciidoc_make(char *filename) {
 	char *asciidoc_path = find_tool("asciidoc");
 
-	int child_pid, standard_input, standard_output, standard_error;
+	int child_pid, standard_output;
 	char *argv[] = {asciidoc_path, "-o", "-", filename, NULL};
 	g_spawn_async_with_pipes(
 		".",
@@ -15,23 +15,19 @@ void asciidoc_make(char *filename) {
 		NULL,
 		NULL,
 		&child_pid,
-		&standard_input,
+		NULL,
 		&standard_output,
-		&standard_error,
+		NULL,
 		NULL
 		);
-	// spit markdown into standard_input
-	//GIOChannel *c = g_io_channel_unix_new(standard_input);
 	GIOChannel *r = g_io_channel_unix_new(standard_output);
-	//g_io_channel_write_chars(c, markdown_Markdown_pl, markdown_Markdown_pl_len, NULL, NULL);
-	//g_io_channel_flush(c, NULL);
 
-	// and fetch the markdown from the other end
 	// TODO pay attention to the error stream
 	gchar *result;
 	gsize result_len;
 	g_io_channel_read_to_end(r, &result, &result_len, NULL);
 	g_io_channel_shutdown(r, TRUE, NULL);
+	g_io_channel_unref(r);
 	result_content = result;
 	result_type = HTML;
 }

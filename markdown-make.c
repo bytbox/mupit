@@ -10,7 +10,7 @@ void markdown_make(char *filename) {
 	char *perl_path = find_tool("perl");
 	GError *err = NULL;
 
-	int child_pid, standard_input, standard_output, standard_error;
+	int child_pid, standard_input, standard_output;
 	char *argv[] = {perl_path, "-", filename, NULL};
 	g_spawn_async_with_pipes(
 		".",
@@ -22,7 +22,7 @@ void markdown_make(char *filename) {
 		&child_pid,
 		&standard_input,
 		&standard_output,
-		&standard_error,
+		NULL,
 		&err
 		);
 
@@ -44,6 +44,8 @@ void markdown_make(char *filename) {
 	g_io_channel_read_to_end(r, &result, &result_len, NULL);
 	g_io_channel_shutdown(c, TRUE, NULL);
 	g_io_channel_shutdown(r, TRUE, NULL);
+	g_io_channel_unref(c);
+	g_io_channel_unref(r);
 	result_content = result;
 	result_type = HTML;
 }
