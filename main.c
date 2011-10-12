@@ -198,7 +198,7 @@ gpointer updater(gpointer data) {
 
 	g_mutex_lock(updated_mutex);
 	while (TRUE) {
-		//g_cond_wait(updated_cond, updated_mutex);
+		g_cond_wait(updated_cond, updated_mutex);
 		while (updated) {
 			// make our local copy of the buffer text
 			g_mutex_lock(update_mutex);

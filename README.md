@@ -46,10 +46,10 @@ These aren't features. These are just things that are so.
 
 ## Known Bugs
 
-  * The non-busy wait doesn't work, resulting in 100% CPU usage.
   * There are no doubt many horrible memory leaks.
 
 Please report additional bugs to <bytbox@gmail.com>.
+
 
 
 
