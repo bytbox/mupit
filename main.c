@@ -241,6 +241,8 @@ void do_update_view() {
 	case DVI:
 		break;
 	case PDF:
+		prepare_pdf_view();
+		update_pdf_view();
 		break;
 	}
 }
