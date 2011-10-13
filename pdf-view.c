@@ -25,7 +25,6 @@ void prepare_pdf_view() {
 
 void update_pdf_view() {
 	GError *err = NULL;
-	
 	gdk_threads_enter();
 	pdf_document = ev_document_factory_get_document(result_content, &err);
 

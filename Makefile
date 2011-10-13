@@ -9,7 +9,8 @@ PKGS = gtk+-3.0 evince-document-3.0 evince-view-3.0 libgtkhtml-4.0
 CFLAGS = $(shell pkg-config --cflags ${PKGS}) ${OPTIM} ${WARN}
 LDFLAGS = $(shell pkg-config --libs ${PKGS})
 
-OBJ = main ui html-view dvi-view pdf-view html-make tex-make markdown-make markdown-script asciidoc-make
+OBJ_LIST = main ui html-view dvi-view pdf-view html-make tex-make markdown-make markdown-script asciidoc-make common
+OBJ = $(sort ${OBJ_LIST})
 OBJFILES = ${OBJ:=.o} 
 
 all: mupit
@@ -28,9 +29,13 @@ markdown-script.c: markdown/Markdown.pl bin2c/bin2c
 bin2c/bin2c: bin2c/bin2c.c bin2c/Makefile
 	make -C bin2c
 
+checkdeps: check-deps.sh
+	@./check-deps.sh
+	@echo All good
+
 clean:
 	rm -rf mupit *.o ui.c markdown-script.c
 	make -C bin2c clean
 
-.PHONY: clean all
+.PHONY: clean all checkdeps
 

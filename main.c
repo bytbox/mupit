@@ -45,6 +45,8 @@ char *source_content = NULL;
 char *result_content = NULL;
 enum result_type_e result_type;
 
+const char *tmp_dir;
+
 enum source_type_e source_type_from_ext(char *);
 void do_save(gchar *);
 void do_update_view();
@@ -106,6 +108,8 @@ int main (int argc, char *argv[]) {
 	gtk_init(&argc, &argv);
 	g_thread_init(NULL);
 	gdk_threads_init();
+
+	tmp_dir = g_get_tmp_dir();
 
 	updated_cond = g_cond_new();
 	updated_mutex = g_mutex_new();
@@ -183,8 +187,8 @@ enum source_type_e source_type_from_ext(char *ext) {
 }
 
 void do_save(gchar *text) {
-	char *alltext = g_strconcat(text, "\n", NULL);
-	g_file_set_contents(source_filename, alltext, -1, NULL);
+	//char *alltext = g_strconcat(text, "\n", NULL);
+	g_file_set_contents(source_filename, text, -1, NULL);
 }
 
 gboolean do_update_view_(gpointer data) {

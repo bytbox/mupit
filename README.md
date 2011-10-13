@@ -28,7 +28,7 @@ These aren't features. These are just things that are so.
 
 ## TODO
 
-  * Add tex/dvi support
+  * Add dvi support
   * Add support for all github "README" markups
     * reStructuredText
     * textile
