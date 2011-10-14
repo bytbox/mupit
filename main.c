@@ -133,8 +133,8 @@ int main (int argc, char *argv[]) {
 	g_signal_connect(gtk_text_view_get_buffer(textview), "changed", G_CALLBACK(modification_made), NULL);
 
 #define CONNECT(x,y,z) g_signal_connect(GTK_WIDGET(gtk_builder_get_object(builder, x)), y, G_CALLBACK(z), NULL)
-	CONNECT("quit_menuitem", "activate", gtk_main_quit);
-	CONNECT("about_menuitem", "activate", show_about);
+	CONNECT("quitbutton", "clicked", gtk_main_quit);
+	CONNECT("aboutbutton", "clicked", show_about);
 
 	g_object_unref (G_OBJECT (builder));
 
