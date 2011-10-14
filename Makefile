@@ -1,5 +1,8 @@
 VERSION = 0.3
 
+PREFIX ?= /usr/local
+INSTALL = install -c
+
 OPTIM = -g -O0
 WARN = -Wextra -Wall -Wno-unused-parameter
 
@@ -31,11 +34,14 @@ bin2c/bin2c: bin2c/bin2c.c bin2c/Makefile
 
 checkdeps: check-deps.sh
 	@./check-deps.sh
-	@echo All good
+	@echo All dependencies good
+
+install: mupit
+	${INSTALL} mupit ${PREFIX}/bin
 
 clean:
 	rm -rf mupit *.o ui.c markdown-script.c
 	make -C bin2c clean
 
-.PHONY: clean all checkdeps
+.PHONY: clean all checkdeps install
 
