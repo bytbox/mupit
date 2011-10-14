@@ -20,6 +20,11 @@ void update_dvi_view();
 extern char ui_glade[];
 extern int ui_glade_len;
 
+/* Templates for creating new files */
+char *get_template(enum source_type_e);
+extern char template_template_tex[];
+extern int template_template_tex_len;
+
 /* GUI components */
 GtkBuilder *builder;
 GtkAboutDialog *ad;
@@ -142,9 +147,12 @@ int main (int argc, char *argv[]) {
 	if (argc == 2) {
 		source_filename = argv[1];
 		// read the file, if it exists
-		gchar *source;
-		g_file_get_contents(source_filename, &source, NULL, NULL);
-
+		gchar *source = NULL;
+		if(g_file_test(source_filename, G_FILE_TEST_EXISTS)) {
+			g_file_get_contents(source_filename, &source, NULL, NULL);
+		} else {
+			source = get_template(source_type_from_ext(source_filename));
+		}
 		GtkTextBuffer *buffer = gtk_text_view_get_buffer(textview);
 		gtk_text_buffer_set_text(buffer, source, -1);
 	} else {
@@ -249,5 +257,25 @@ void do_update_view() {
 		update_pdf_view();
 		break;
 	}
+}
+
+char *get_template(enum source_type_e s) {
+	int len;
+	char *data;
+	switch(s) {
+	case HTML_SRC:
+		return "";
+	case MARKDOWN_SRC:
+		return "";
+	case ASCIIDOC_SRC:
+		return "";
+	case TEX_SRC:
+		len = template_template_tex_len;
+		data = template_template_tex;
+		break;
+	default:
+		return "Unknown file type";
+	}
+	return g_strndup(data, len);
 }
 

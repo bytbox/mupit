@@ -4,3 +4,4 @@ bin2c/bin2c
 ui.c
 *.swp
 markdown-script.c
+template-*.c
