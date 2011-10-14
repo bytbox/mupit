@@ -6,10 +6,10 @@ INSTALL = install -c
 OPTIM = -g -O0
 WARN = -Wextra -Wall -Wno-unused-parameter
 
-CONFIG_STR = -DVERSION="${VERSION}"
+CONFIG_STR = -DVERSION="${VERSION}" -DPDFTEX
 
 PKGS = gtk+-3.0 evince-document-3.0 evince-view-3.0 libgtkhtml-4.0
-CFLAGS = $(shell pkg-config --cflags ${PKGS}) ${OPTIM} ${WARN}
+CFLAGS = $(shell pkg-config --cflags ${PKGS}) ${OPTIM} ${WARN} ${CONFIG_STR}
 LDFLAGS = $(shell pkg-config --libs ${PKGS})
 
 TEMPLATE_LIST = tex html markdown asciidoc

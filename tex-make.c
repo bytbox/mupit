@@ -63,6 +63,10 @@ void tex_make_pdf(char *filename) {
 }
 
 void tex_make(char *filename) {
+#ifdef PDFTEX
 	tex_make_pdf(filename);
+#else
+	tex_make_dvi(filename);
+#endif
 }
 
