@@ -39,6 +39,8 @@ GtkViewport *view_viewport;
 GtkContainer *view_container;
 GtkScrolledWindow *view_scroll;
 GtkLayout *view_layout;
+GtkFileChooserDialog *fileopendialog;
+GtkFileChooserDialog *filesavedialog;
 
 /* Update control */
 GThread *update_thread;
@@ -136,6 +138,8 @@ int main (int argc, char *argv[]) {
 	textview = GTK_TEXT_VIEW (gtk_builder_get_object(builder, "textview"));
 	view_container = GTK_CONTAINER (gtk_builder_get_object(builder, "view_container"));
 	view_scroll = GTK_SCROLLED_WINDOW(view_container);
+	fileopendialog = GTK_FILE_CHOOSER_DIALOG(gtk_builder_get_object(builder, "fileopendialog"));
+	filesavedialog = GTK_FILE_CHOOSER_DIALOG(gtk_builder_get_object(builder, "filesavedialog"));
 	//gtk_widget_set_size_request(GTK_WIDGET(view_viewport), 500, -1);
 
 	gtk_builder_connect_signals (builder, NULL);
