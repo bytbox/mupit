@@ -135,6 +135,7 @@ int main (int argc, char *argv[]) {
 	ad = GTK_ABOUT_DIALOG (gtk_builder_get_object(builder, "about"));
 	textview = GTK_TEXT_VIEW (gtk_builder_get_object(builder, "textview"));
 	view_container = GTK_CONTAINER (gtk_builder_get_object(builder, "view_container"));
+	view_scroll = GTK_SCROLLED_WINDOW(view_container);
 	//gtk_widget_set_size_request(GTK_WIDGET(view_viewport), 500, -1);
 
 	gtk_builder_connect_signals (builder, NULL);
@@ -234,7 +235,15 @@ gpointer updater(gpointer data) {
 	return NULL;
 }
 
+gboolean prepared = FALSE;
+
 void do_update_view() {
+	// get current adjustments
+	GtkAdjustment *ha = gtk_scrolled_window_get_hadjustment(view_scroll);
+	GtkAdjustment *va = gtk_scrolled_window_get_vadjustment(view_scroll);
+	double hv = gtk_adjustment_get_value(ha);
+	double vv = gtk_adjustment_get_value(va);
+
 	enum source_type_e source_type = source_type_from_ext(source_filename);
 	switch (source_type) {
 	case HTML_SRC:
@@ -259,10 +268,19 @@ void do_update_view() {
 	case DVI:
 		break;
 	case PDF:
-		prepare_pdf_view();
+		if (!prepared) {
+			prepare_pdf_view();
+			//prepared = TRUE;
+		}
 		update_pdf_view();
 		break;
 	}
+	gdk_threads_enter();
+	gtk_scrolled_window_set_hadjustment(view_scroll, ha);
+	gtk_scrolled_window_set_vadjustment(view_scroll, va);
+	gtk_adjustment_set_value(ha, hv);
+	gtk_adjustment_set_value(va, vv);
+	gdk_threads_leave();
 }
 
 char *get_template(enum source_type_e s) {
