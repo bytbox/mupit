@@ -30,6 +30,7 @@ void update_pdf_view() {
 
 	if (err) {
 		fprintf(stderr, "EVINCE ERROR: %s\n", err->message);
+		gdk_threads_leave();
 		return;
 	}
 
