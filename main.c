@@ -251,10 +251,3 @@ void do_update_view() {
 	}
 }
 
-char *find_tool(char *t) {
-	int len = strlen(t) + 20;
-	gchar *buf = g_new(gchar, len);
-	g_snprintf(buf, len, "/usr/bin/%s", t); // TODO actually search the path
-	return buf;
-}
-
