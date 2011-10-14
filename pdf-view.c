@@ -29,7 +29,7 @@ void update_pdf_view() {
 	pdf_document = ev_document_factory_get_document(result_content, &err);
 
 	if (err) {
-		fprintf(stderr, "EVINCE ERROR: %s\n", err->message);
+		fprintf(stderr, "EVINCE ERROR: %s (%s)\n", err->message, result_content);
 		gdk_threads_leave();
 		return;
 	}

@@ -1,4 +1,5 @@
 #include <glib.h>
+#include <libgen.h>
 #include <string.h>
 
 #include "common.h"
@@ -52,7 +53,7 @@ void tex_make_pdf(char *filename) {
 	g_io_channel_unref(in);
 	g_io_channel_unref(out);
 	g_io_channel_unref(errput);
-	result_content = g_filename_to_uri(tmppath(g_strndup(filename, strlen(filename)+5)), NULL, &err);
+	result_content = g_filename_to_uri(tmppath(g_strndup(basename(filename), strlen(basename(filename))+5)), NULL, &err);
 	if (err) {
 		fprintf(stderr, "FILENAME_TO_URI ERROR: %s\n", err->message);
 		return;
