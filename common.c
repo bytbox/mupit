@@ -10,6 +10,7 @@ char *tmppath(char *relp) {
 }
 
 char *abspath(char *relp) {
+	if (g_path_is_absolute(relp)) return relp;
 	char *curdir = g_get_current_dir();
 	return g_build_path(G_DIR_SEPARATOR_S, curdir, relp, NULL);
 }
