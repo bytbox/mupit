@@ -22,6 +22,12 @@ extern int ui_glade_len;
 
 /* Templates for creating new files */
 char *get_template(enum source_type_e);
+extern char template_template_txt[];
+extern int template_template_txt_len;
+extern char template_template_html[];
+extern int template_template_html_len;
+extern char template_template_md[];
+extern int template_template_md_len;
 extern char template_template_tex[];
 extern int template_template_tex_len;
 
@@ -264,11 +270,17 @@ char *get_template(enum source_type_e s) {
 	char *data;
 	switch(s) {
 	case HTML_SRC:
-		return "";
+		len = template_template_html_len;
+		data = template_template_html;
+		break;
 	case MARKDOWN_SRC:
-		return "";
+		len = template_template_md_len;
+		data = template_template_md;
+		break;
 	case ASCIIDOC_SRC:
-		return "";
+		len = template_template_txt_len;
+		data = template_template_txt;
+		break;
 	case TEX_SRC:
 		len = template_template_tex_len;
 		data = template_template_tex;
