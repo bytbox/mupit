@@ -62,15 +62,10 @@ const char *tmp_dir;
 
 enum source_type_e source_type_from_ext(char *);
 void do_save(gchar *);
+void do_open(gchar *);
 void do_update_view();
 gboolean do_update_view_(gpointer);
 gpointer updater (gpointer);
-
-static gboolean show_about(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
-	gtk_dialog_run(GTK_DIALOG(ad));
-	gtk_widget_hide(GTK_WIDGET(ad));
-	return TRUE;
-}
 
 static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
 	GdkEventKey k = event->key;
@@ -79,9 +74,6 @@ static gboolean key_press_event(GtkWidget *widget, GdkEvent *event, GtkLabel *la
 		case 'h':
 			gtk_dialog_run(GTK_DIALOG(ad));
 			gtk_widget_hide(GTK_WIDGET(ad));
-			return TRUE;
-		case 'r':
-			do_update_view();
 			return TRUE;
 		}
 	}
@@ -115,6 +107,35 @@ static gboolean modification_made(GtkWidget *widget, GdkEvent *event, GtkLabel *
 	return FALSE;
 }
 
+static gboolean show_about(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
+	gtk_dialog_run(GTK_DIALOG(ad));
+	gtk_widget_hide(GTK_WIDGET(ad));
+	return TRUE;
+}
+
+static gboolean show_open(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
+	if(gtk_dialog_run(GTK_DIALOG(fileopendialog)) == GTK_RESPONSE_ACCEPT) {
+		char *filename;
+    		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fileopendialog));
+		do_open(filename);
+		source_filename = filename;
+		do_update_view(); // TODO lcok stuff?
+	}
+	gtk_widget_hide(GTK_WIDGET(fileopendialog));
+	return TRUE;
+}
+
+static gboolean show_save(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
+	if(gtk_dialog_run(GTK_DIALOG(filesavedialog)) == GTK_RESPONSE_ACCEPT) {
+		char *filename;
+    		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (filesavedialog));
+		source_filename = filename;
+		modification_made(NULL, NULL, NULL);
+	}
+	gtk_widget_hide(GTK_WIDGET(filesavedialog));
+	return TRUE;
+}
+
 int main (int argc, char *argv[]) {
 	GtkWidget *window;
 
@@ -138,8 +159,21 @@ int main (int argc, char *argv[]) {
 	textview = GTK_TEXT_VIEW (gtk_builder_get_object(builder, "textview"));
 	view_container = GTK_CONTAINER (gtk_builder_get_object(builder, "view_container"));
 	view_scroll = GTK_SCROLLED_WINDOW(view_container);
-	fileopendialog = GTK_FILE_CHOOSER_DIALOG(gtk_builder_get_object(builder, "fileopendialog"));
-	filesavedialog = GTK_FILE_CHOOSER_DIALOG(gtk_builder_get_object(builder, "filesavedialog"));
+
+	fileopendialog = GTK_FILE_CHOOSER_DIALOG(gtk_file_chooser_dialog_new ("Open File",
+		GTK_WINDOW(window),
+		GTK_FILE_CHOOSER_ACTION_OPEN,
+		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+		GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+		NULL));
+
+	filesavedialog = GTK_FILE_CHOOSER_DIALOG(gtk_file_chooser_dialog_new ("Save File",
+		GTK_WINDOW(window),
+		GTK_FILE_CHOOSER_ACTION_SAVE,
+		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+		GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+		NULL));
+
 	//gtk_widget_set_size_request(GTK_WIDGET(view_viewport), 500, -1);
 
 	gtk_builder_connect_signals (builder, NULL);
@@ -150,6 +184,8 @@ int main (int argc, char *argv[]) {
 
 #define CONNECT(x,y,z) g_signal_connect(GTK_WIDGET(gtk_builder_get_object(builder, x)), y, G_CALLBACK(z), NULL)
 	CONNECT("quitbutton", "clicked", gtk_main_quit);
+	CONNECT("openbutton", "clicked", show_open);
+	CONNECT("saveasbutton", "clicked", show_save);
 	CONNECT("aboutbutton", "clicked", show_about);
 
 	g_object_unref (G_OBJECT (builder));
@@ -208,6 +244,10 @@ enum source_type_e source_type_from_ext(char *ext) {
 void do_save(gchar *text) {
 	//char *alltext = g_strconcat(text, "\n", NULL);
 	g_file_set_contents(source_filename, text, -1, NULL);
+}
+
+void do_open(gchar *fname) {
+
 }
 
 gboolean do_update_view_(gpointer data) {
