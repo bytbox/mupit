@@ -118,7 +118,6 @@ static gboolean show_open(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
 		char *filename;
     		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fileopendialog));
 		do_open(filename);
-		//do_update_view(); // TODO lcok stuff?
 	}
 	gtk_widget_hide(GTK_WIDGET(fileopendialog));
 	return TRUE;
