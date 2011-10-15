@@ -38,7 +38,6 @@ These aren't features. These are just things that are so.
     * mediawiki (perhaps integrated with a mediawiki api)
     * pod
     * groff
-  * Allow "save as"
   * Use monospaced font for the editing area.
   * Add the standard text editor features
     * Find/replace
