@@ -118,8 +118,7 @@ static gboolean show_open(GtkWidget *widget, GdkEvent *event, GtkLabel *label) {
 		char *filename;
     		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fileopendialog));
 		do_open(filename);
-		source_filename = filename;
-		do_update_view(); // TODO lcok stuff?
+		//do_update_view(); // TODO lcok stuff?
 	}
 	gtk_widget_hide(GTK_WIDGET(fileopendialog));
 	return TRUE;
@@ -247,7 +246,15 @@ void do_save(gchar *text) {
 }
 
 void do_open(gchar *fname) {
-
+	source_filename = fname;
+	gchar *source = NULL;
+	if(g_file_test(source_filename, G_FILE_TEST_EXISTS)) {
+		g_file_get_contents(source_filename, &source, NULL, NULL);
+	} else {
+		source = get_template(source_type_from_ext(source_filename));
+	}
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer(textview);
+	gtk_text_buffer_set_text(buffer, source, -1);
 }
 
 gboolean do_update_view_(gpointer data) {
